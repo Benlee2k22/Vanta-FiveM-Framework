@@ -32,7 +32,7 @@ tasks:
   # Download Vanta, then place each resource at the path its resource name expects.
   - action: download_github
     src: https://github.com/Benlee2k22/Vanta-FiveM-Framework
-    ref: main
+    ref: feature/interaction-hud-e-menu
     dest: ./tmp/vanta
 
   - action: query_database
@@ -42,12 +42,24 @@ tasks:
     path: ./resources/[vanta]
 
   - action: move_path
+    src: ./tmp/vanta/vanta-loading
+    dest: ./resources/[vanta]/vanta-loading
+
+  - action: move_path
     src: ./tmp/vanta/vanta-core
     dest: ./resources/[vanta]/vanta-core
 
   - action: move_path
     src: ./tmp/vanta/vanta-ui
     dest: ./resources/[vanta]/vanta-ui
+
+  - action: move_path
+    src: ./tmp/vanta/vanta-character
+    dest: ./resources/[vanta]/vanta-character
+
+  - action: move_path
+    src: ./tmp/vanta/vanta-clothing
+    dest: ./resources/[vanta]/vanta-clothing
 
   - action: move_path
     src: ./tmp/vanta/vanta-banking
@@ -87,8 +99,11 @@ tasks:
       set mysql_connection_string "{{dbConnectionString}}"
 
       ensure oxmysql
+      ensure vanta-loading
       ensure vanta-core
       ensure vanta-ui
+      ensure vanta-character
+      ensure vanta-clothing
       ensure vanta-banking
       ensure vanta-police
       ensure vanta-hospital
