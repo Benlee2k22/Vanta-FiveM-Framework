@@ -4,7 +4,11 @@ set mysql_connection_string "mysql://user:password@127.0.0.1/vanta?charset=utf8m
 ensure oxmysql
 ensure vanta-core
 ensure vanta-ui
+ensure vanta-banking
+ensure vanta-police
+ensure vanta-hospital
 ensure qb-core
+ensure vanta-inventory
 
 # Start framework-dependent resources after the bridge.
 # ensure your_inventory

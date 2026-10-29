@@ -27,12 +27,13 @@ exports['vanta-ui']:AddRadialItem('escort', {
 - Client `Functions.GetPlayerData`, `TriggerCallback`, `Notify`, `Progressbar`, `GetCoords`, `HasItem`
 - Server `Functions.GetPlayer`, `GetPlayers`, `GetPlayerByCitizenId`, callbacks, permission checks and notify
 - Player data fields for source, citizen ID, license, money, character info, job and metadata
-- Player money operations and basic job set operation
+- Player money and inventory add/remove/lookup operations, and basic job/duty changes
+- Starter `police` and `ambulance` jobs with QBCore-style grade objects
 - Common player loaded/unloaded and money/job change events
 
 ## Known limitations
 
-This is an early compatibility layer, not a drop-in clone of every QBCore release. It does not bundle inventory, shops, gangs, vehicles, multicharacter selection, banking, management, target, clothing, housing, or phone resources. `HasItem` returns false because there is no inventory adapter. `Shared.Items`, `Jobs`, `Gangs` and `Vehicles` are only small placeholders. Scripts that access core internals or rely on custom QBCore events will need an adapter.
+This is an early compatibility layer, not a drop-in clone of every QBCore release. It does not bundle shops, gangs, vehicles, multicharacter selection, management, target, clothing, housing, or phone resources. `Gangs` and `Vehicles` are still placeholders. Scripts that access core internals or rely on custom QBCore events will need an adapter.
 
 Before switching a live server, inventory each resource and replace the old `qb-core` in a staging server. Test player load, save, money, job changes, callbacks and each script's integrations. Back up the database first.
 

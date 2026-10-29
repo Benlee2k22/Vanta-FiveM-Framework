@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 - 2026-10-29
+
+- Added persistent slot inventory, starter consumables and `/giveitem` for development.
+- Added bank/ATM transactions and ledger, police duty/custody actions, EMS duty and hospital treatment.
+- Added starter police/EMS jobs, grade permissions and on-duty paychecks.
+- Added saved position restore and a two-player test checklist.
+
 ## 0.2.0 - 2026-10-29
 
 - Added E-and-scroll proximity interactions with configurable option lists.

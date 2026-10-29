@@ -1,8 +1,31 @@
 local PlayerData, callbacks, requestId = {}, {}, 0
 
-RegisterNetEvent('vanta:client:loaded', function(data) PlayerData = data or {}; TriggerEvent('Vanta:Client:OnPlayerLoaded', PlayerData) end)
-RegisterNetEvent('vanta:client:moneyChanged', function(kind, amount, action, reason) if PlayerData.money then PlayerData.money[kind] = amount end; TriggerEvent('Vanta:Client:OnMoneyChange', kind, amount, action, reason) end)
-RegisterNetEvent('vanta:client:jobUpdated', function(job) PlayerData.job = job; TriggerEvent('Vanta:Client:OnJobUpdate', job) end)
+RegisterNetEvent('vanta:client:loaded', function(data)
+    PlayerData = data or {}
+    TriggerEvent('Vanta:Client:OnPlayerLoaded', PlayerData)
+    CreateThread(function()
+        while not NetworkIsPlayerActive(PlayerId()) do Wait(250) end
+        local pos = PlayerData.position
+        if pos and pos.x and pos.y and pos.z then
+            DoScreenFadeOut(250); Wait(350)
+            local ped = PlayerPedId()
+            if IsEntityDead(ped) then NetworkResurrectLocalPlayer(pos.x, pos.y, pos.z, pos.w or 0.0, true, false) else SetEntityCoordsNoOffset(ped, pos.x, pos.y, pos.z, false, false, false) end
+            SetEntityHeading(PlayerPedId(), pos.w or 0.0); DoScreenFadeIn(500)
+        end
+    end)
+end)
+RegisterNetEvent('vanta:client:moneyChanged', function(kind, amount, action, reason)
+    if PlayerData.money then PlayerData.money[kind] = amount end
+    TriggerEvent('Vanta:Client:OnMoneyChange', kind, amount, action, reason)
+    TriggerEvent('QBCore:Client:OnMoneyChange', kind, amount, action, reason)
+end)
+RegisterNetEvent('vanta:client:jobUpdated', function(job)
+    PlayerData.job = job; TriggerEvent('Vanta:Client:OnJobUpdate', job); TriggerEvent('QBCore:Client:OnJobUpdate', job)
+end)
+RegisterNetEvent('vanta:client:inventoryUpdated', function(inventory) PlayerData.inventory = inventory or {}; PlayerData.items = PlayerData.inventory; TriggerEvent('Vanta:Client:OnInventoryUpdate', PlayerData.inventory) end)
+RegisterNetEvent('vanta:client:applyBandage', function()
+    local ped = PlayerPedId(); SetEntityHealth(ped, math.min(GetEntityMaxHealth(ped), GetEntityHealth(ped) + 35))
+end)
 RegisterNetEvent('vanta:client:callbackResult', function(id, ...) local cb = callbacks[id]; if cb then cb(...); callbacks[id] = nil end end)
 
 VantaClient = {
@@ -17,6 +40,11 @@ VantaClient = {
     end
 }
 exports('GetPlayerData', VantaClient.GetPlayerData)
+exports('GetShared', function() return { Jobs = VantaConfig.Jobs, Items = VantaConfig.Items, Inventory = VantaConfig.Inventory, Gangs = {}, Vehicles = {} } end)
 exports('TriggerCallback', VantaClient.TriggerCallback)
 exports('Notify', VantaClient.Notify)
 exports('Progressbar', VantaClient.Progressbar)
+
+CreateThread(function()
+    while true do Wait(30000); if next(PlayerData) then TriggerServerEvent('vanta:server:savePosition') end end
+end)

@@ -5,7 +5,7 @@ lua54 'yes'
 name 'qb-core'
 author 'Vanta'
 description 'QBCore API compatibility adapter for Vanta Framework'
-version '0.1.0'
+version '0.3.0'
 
 server_script 'server.lua'
 client_script 'client.lua'
