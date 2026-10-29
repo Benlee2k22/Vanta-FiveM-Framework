@@ -5,19 +5,26 @@ local function playerWrapper(src)
     local data = exports['vanta-core']:GetPlayerData(src)
     if not data then return nil end
     local f = {}
+    local function refresh()
+        local latest = exports['vanta-core']:GetPlayerData(src)
+        if not latest then return end
+        for key in pairs(data) do data[key] = nil end
+        for key, value in pairs(latest) do data[key] = value end
+    end
+    local function mutate(callback) local result = callback(); refresh(); return result end
     f.GetName = function() return data.charinfo.firstname .. ' ' .. data.charinfo.lastname end
     f.GetMoney = function(kind) return tonumber(data.money[kind]) or 0 end
-    f.AddMoney = function(kind, amount, reason) return exports['vanta-core']:AddMoney(src, kind, amount, reason) end
-    f.RemoveMoney = function(kind, amount, reason) return exports['vanta-core']:RemoveMoney(src, kind, amount, reason) end
-    f.SetMoney = function(kind, amount, reason) return exports['vanta-core']:SetMoney(src, kind, amount, reason) end
-    f.AddItem = function(name, amount, slot, info) return exports['vanta-core']:AddItem(src, name, amount, slot, info) end
-    f.RemoveItem = function(name, amount, slot) return exports['vanta-core']:RemoveItem(src, name, amount, slot) end
+    f.AddMoney = function(kind, amount, reason) return mutate(function() return exports['vanta-core']:AddMoney(src, kind, amount, reason) end) end
+    f.RemoveMoney = function(kind, amount, reason) return mutate(function() return exports['vanta-core']:RemoveMoney(src, kind, amount, reason) end) end
+    f.SetMoney = function(kind, amount, reason) return mutate(function() return exports['vanta-core']:SetMoney(src, kind, amount, reason) end) end
+    f.AddItem = function(name, amount, slot, info) return mutate(function() return exports['vanta-core']:AddItem(src, name, amount, slot, info) end) end
+    f.RemoveItem = function(name, amount, slot) return mutate(function() return exports['vanta-core']:RemoveItem(src, name, amount, slot) end) end
     f.GetItemByName = function(name) return exports['vanta-core']:GetItemByName(src, name) end
     f.GetItemsByName = function(name) local found = {}; for _, item in ipairs(data.inventory or {}) do if item.name == name then found[#found + 1] = item end end; return found end
     f.HasItem = function(name, amount) local item = f.GetItemByName(name); return item ~= nil and item.amount >= (tonumber(amount) or 1) end
-    f.SetJob = function(job, grade) return exports['vanta-core']:SetJob(src, job, grade) end
-    f.SetJobDuty = function(onDuty) return exports['vanta-core']:SetDuty(src, onDuty) end
-    f.SetMetaData = function(key, value) return exports['vanta-core']:SetMetaData(src, key, value) end
+    f.SetJob = function(job, grade) return mutate(function() return exports['vanta-core']:SetJob(src, job, grade) end) end
+    f.SetJobDuty = function(onDuty) return mutate(function() return exports['vanta-core']:SetDuty(src, onDuty) end) end
+    f.SetMetaData = function(key, value) return mutate(function() return exports['vanta-core']:SetMetaData(src, key, value) end) end
     f.GetMetaData = function(key) return data.metadata[key] end
     return { PlayerData = data, Functions = f }
 end
