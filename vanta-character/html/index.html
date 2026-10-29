@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vanta Character</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<main id="app" class="app hidden">
+  <header class="top"><div class="brand"><span class="mark">V</span><span><small>VANTA ROLEPLAY</small><b>CHARACTERS</b></span></div><div class="slots"><span id="slotCount">0 / 4</span><small>CHARACTER SLOTS</small></div></header>
+  <section id="listScreen" class="screen">
+    <div class="intro"><small>YOUR STORY STARTS HERE</small><h1>Select a character</h1><p>Choose who you want to bring into Los Santos.</p></div>
+    <div id="characterGrid" class="character-grid"></div>
+    <button id="newCharacter" class="primary">＋ Create a character</button>
+  </section>
+  <section id="createScreen" class="screen hidden">
+    <button class="back" data-screen="list">← Back to characters</button>
+    <div class="intro"><small>NEW IDENTITY</small><h1>Create your character</h1><p>Enter the details for your character profile.</p></div>
+    <form id="createForm">
+      <div class="fields"><label>First name<input name="firstname" minlength="2" maxlength="24" required></label><label>Last name<input name="lastname" minlength="2" maxlength="24" required></label><label>Date of birth<input name="birthdate" type="date" required></label><label>Nationality<input name="nationality" value="American" maxlength="24"></label></div>
+      <fieldset><legend>Character model</legend><label><input type="radio" name="gender" value="0" checked> Male</label><label><input type="radio" name="gender" value="1"> Female</label></fieldset>
+      <button class="primary" type="submit">Create character <span>→</span></button>
+    </form>
+  </section>
+  <section id="spawnScreen" class="screen hidden">
+    <button class="back" data-screen="list">← Back to characters</button>
+    <div class="intro"><small id="spawnEyebrow">WELCOME BACK</small><h1 id="spawnTitle">Choose your spawn</h1><p>Select your last location or start somewhere new.</p></div>
+    <div id="spawnGrid" class="spawn-grid"></div>
+  </section>
+  <aside id="confirm" class="confirm hidden"><div><small>DELETE CHARACTER</small><h2>Are you sure?</h2><p>This permanently deletes the character and its saved data.</p><footer><button id="cancelDelete" class="secondary">Keep character</button><button id="confirmDelete" class="danger">Delete</button></footer></div></aside>
+</main><script src="app.js"></script></body></html>
