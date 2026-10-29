@@ -2,7 +2,7 @@
 
 Vanta is an original FiveM roleplay framework foundation with a modern, themeable NUI and a QBCore compatibility resource.
 
-> **Status:** early access foundation for development and controlled server trials. It is not yet a complete replacement for every QBCore resource. Inventory, character selection, housing, garages and a full economy remain future module work.
+> **Status:** early access foundation for development and controlled server trials. It is not yet a complete replacement for every QBCore resource. Character selection, housing, garages and a full economy remain future module work.
 
 ## Included
 
@@ -22,7 +22,22 @@ Compatibility depends on each script's API usage. Standard QBCore calls can be t
 - FXServer with OneSync enabled
 - MariaDB/MySQL and [oxmysql](https://github.com/overextended/oxmysql)
 
-## Install
+## Install with txAdmin
+
+Vanta includes a txAdmin remote recipe that installs the framework resources, oxmysql, the default Cfx resources, database tables, and a starter `server.cfg`.
+
+1. In txAdmin, open the Recipe Deployer and choose the option to enter a remote recipe URL.
+2. Paste this URL:
+
+   `https://raw.githubusercontent.com/Benlee2k22/Vanta-FiveM-Framework/main/recipe.yaml`
+
+3. Review the recipe, then continue to the inputs. Enter your Cfx server key and the details for a MySQL/MariaDB database that the server can reach.
+4. Run the recipe. It creates a new server profile and imports the Vanta tables into the selected database.
+5. When deployment finishes, start the server from txAdmin and check the console for resource errors.
+
+Use a fresh test profile and a test database for the first installation. The recipe configures a resource named `qb-core` for compatibility, so do not add it alongside another resource with the same name.
+
+## Manual install
 
 1. Put all six Vanta resources plus `qb-core` in your resources directory. Keep the compatibility folder named **`qb-core`** so existing scripts resolve `exports['qb-core']`.
 2. Import `sql/vanta.sql` into the database configured for oxmysql.
