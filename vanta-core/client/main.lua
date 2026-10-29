@@ -1,5 +1,7 @@
 local PlayerData, callbacks, requestId = {}, {}, 0
 
+RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) if type(data) == 'table' then PlayerData = data end end)
+
 RegisterNetEvent('vanta:client:loaded', function(data)
     PlayerData = data or {}
     TriggerEvent('Vanta:Client:OnPlayerLoaded', PlayerData)
