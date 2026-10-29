@@ -2,7 +2,7 @@
 
 Vanta is an original FiveM roleplay framework foundation with a modern, themeable NUI and a QBCore compatibility resource.
 
-> **Status:** early access foundation for development and controlled server trials. It is an early access build for development and controlled server trials; broad QBCore script compatibility, housing, garages and a complete economy remain future work.
+> **Status:** early access build for development and controlled server trials. Broad QBCore script compatibility, housing, garages and a complete economy remain future work.
 
 ## Included
 
