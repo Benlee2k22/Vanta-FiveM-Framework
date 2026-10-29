@@ -130,9 +130,9 @@ function Player:Save()
     MySQL.insert.await('INSERT INTO vanta_inventories (citizenid, items) VALUES (?, ?) ON DUPLICATE KEY UPDATE items = VALUES(items)', { d.citizenid, json.encode(d.inventory) })
 end
 
-local function makePlayer(src, row)
+local function makePlayer(src, row, accountLicense)
     local data = {
-        source = src, citizenid = row.citizenid, license = row.license, name = GetPlayerName(src) or row.name,
+        source = src, citizenid = row.citizenid, license = accountLicense or row.license, name = GetPlayerName(src) or row.name,
         money = json.decode(row.money or '{}') or {}, charinfo = json.decode(row.charinfo or '{}') or {},
         job = json.decode(row.job or '{}') or {}, metadata = json.decode(row.metadata or '{}') or {},
         position = json.decode(row.position or 'null') or VantaConfig.StartingPosition,
@@ -164,30 +164,15 @@ local function makePlayer(src, row)
     log(('%s loaded (%s)'):format(data.name, data.citizenid))
 end
 
-local function loadPlayer(src)
-    local license = licenseFor(src)
-    if not license then DropPlayer(src, 'Could not identify your license.'); return end
-    local row = MySQL.single.await('SELECT * FROM vanta_players WHERE license = ?', { license })
-    if not row then
-        local cid = citizenId()
-        local info = { firstname = GetPlayerName(src) or 'New', lastname = 'Player', birthdate = '2000-01-01', gender = 0, nationality = 'Unknown' }
-        local money, job, metadata = copy(VantaConfig.DefaultMoney), copy(VantaConfig.DefaultJob), { hunger = 100, thirst = 100, stress = 0 }
-        MySQL.insert.await('INSERT INTO vanta_players (citizenid, license, name, money, charinfo, job, metadata, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', {
-            cid, license, GetPlayerName(src) or 'Unknown', json.encode(money), json.encode(info), json.encode(job), json.encode(metadata), json.encode(VantaConfig.StartingPosition)
-        })
-        row = { citizenid = cid, license = license, name = GetPlayerName(src) or 'Unknown', money = json.encode(money), charinfo = json.encode(info), job = json.encode(job), metadata = json.encode(metadata), position = json.encode(VantaConfig.StartingPosition) }
-    end
-    local inventory = MySQL.single.await('SELECT items FROM vanta_inventories WHERE citizenid = ?', { row.citizenid })
-    row.inventory = inventory and inventory.items or '[]'
-    makePlayer(src, row)
-end
-
 AddEventHandler('playerJoining', function()
     local src = source
     CreateThread(function()
         local tries = 0
         while not GetPlayerName(src) and tries < 50 do Wait(100); tries = tries + 1 end
-        if GetPlayerName(src) then loadPlayer(src) end
+        if GetPlayerName(src) then
+            Wait(1000)
+            TriggerClientEvent('vanta:character:open', src)
+        end
     end)
 end)
 AddEventHandler('playerDropped', function()
@@ -223,6 +208,16 @@ exports('RegisterCallback', Vanta.RegisterCallback)
 exports('GetCoreObject', function() return Vanta end)
 exports('GetShared', function() return { Jobs = VantaConfig.Jobs, Items = VantaConfig.Items, Inventory = VantaConfig.Inventory, Gangs = {}, Vehicles = {} } end)
 exports('GetPlayerData', function(src) local p = Vanta.GetPlayer(src); return p and copy(p.PlayerData) or nil end)
+exports('LoadCharacter', function(src, citizenid, accountLicense)
+    src, citizenid = tonumber(src), tostring(citizenid or '')
+    if not src or Vanta.Players[src] then return false end
+    local row = MySQL.single.await('SELECT * FROM vanta_players WHERE citizenid = ?', { citizenid })
+    if not row then return false end
+    local inventory = MySQL.single.await('SELECT items FROM vanta_inventories WHERE citizenid = ?', { citizenid })
+    row.inventory = inventory and inventory.items or '[]'
+    makePlayer(src, row, accountLicense)
+    return true
+end)
 exports('AddMoney', function(src, kind, amount, reason) local p = Vanta.GetPlayer(src); return p and p:AddMoney(kind, amount, reason) or false end)
 exports('RemoveMoney', function(src, kind, amount, reason) local p = Vanta.GetPlayer(src); return p and p:RemoveMoney(kind, amount, reason) or false end)
 exports('SetMoney', function(src, kind, amount, reason) local p = Vanta.GetPlayer(src); return p and p:SetMoney(kind, amount, reason) or false end)
