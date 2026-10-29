@@ -2,8 +2,11 @@ set onesync on
 set mysql_connection_string "mysql://user:password@127.0.0.1/vanta?charset=utf8mb4"
 
 ensure oxmysql
+ensure vanta-loading
 ensure vanta-core
 ensure vanta-ui
+ensure vanta-character
+ensure vanta-clothing
 ensure vanta-banking
 ensure vanta-police
 ensure vanta-hospital
