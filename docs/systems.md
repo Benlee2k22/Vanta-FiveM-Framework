@@ -1,8 +1,22 @@
 # Vanta test systems
 
-## E-and-scroll interactions
+## Interaction HUD
 
-Nearby resources register points through `exports['vanta-ui']:AddInteraction`. The HUD prompt shows available options; use the mouse wheel to change selection and press **E** to activate it. There is no eye-target resource. Edit locations and interaction distances in each module's `shared/config.lua`.
+The interaction HUD places a boxed red action icon and **E** prompt at the lower left when a registered point is nearby. Press **E** to open that point's option list, scroll to select, and press **E** again to activate. The F1 radial stays separate for quick actions. Resources register points through `exports['vanta-ui']:AddInteraction`; configure locations in each module's `shared/config.lua`.
+
+## Characters and spawning
+
+The character resource supports up to four character slots per FiveM license. Create a character with a name, date of birth, nationality and freemode gender, select or delete a character, then choose its saved last location or a configured preset spawn. Money, job, inventory, metadata, position and appearance load per citizen ID. The first login for an older Vanta database migrates its existing player row into slot one.
+
+Spawn presets and the selection scene are in `vanta-character/shared/config.lua`. Appearance selection starts with male/female freemode models. The clothing module stores native ped components and props for each citizen ID.
+
+## Clothing and wardrobes
+
+At a configured clothing shop, use the E prompt, select **Browse clothing**, and use the clothing panel to change components, textures and props. Saving a shop look costs the configured price (default $250) and persists it as both the active appearance and a saved outfit. At a configured wardrobe, browse saved outfits, wear one, or delete it. Store points, wardrobe points, garment categories and price are in `vanta-clothing/shared/config.lua`.
+
+## Loading screen
+
+The `vanta-loading` resource uses FiveM's loading-screen NUI with the platform's progress messages. It shows Vanta branding, rotating tips and a progress bar. The music toggle starts a locally synthesized ambient pad after the player clicks it; no external music file is required. The loading screen closes when the character selector is ready.
 
 ## Banking
 
@@ -28,4 +42,4 @@ This initial medical loop does not include injury/death integration, stretcher a
 
 ## Development server scope
 
-These are starter systems for a development server. Third-party scripts may need adapters. Review map locations, economy values and ACE permissions before opening the server to players. Back up the database before importing schema updates.
+These are early access systems for a development server. Third-party scripts may need adapters. Review map locations, economy values and ACE permissions before opening the server to players. Back up the database before importing schema updates.
