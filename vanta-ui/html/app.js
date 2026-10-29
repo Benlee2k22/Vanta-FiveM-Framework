@@ -11,12 +11,28 @@ let radialItems=[];
 function closeRadial(){document.querySelector('#radial').classList.add('hidden');post('radial:close')}
 function selectRadial(index=0){const item=radialItems[index];if(!item)return;document.querySelector('#radial').classList.add('hidden');post('radial:select',{id:item.id})}
 window.addEventListener('message',e=>{const m=e.data||{};
-  if(m.action==='interaction:show'){
-    const root=document.querySelector('#interaction'),list=document.querySelector('#interactionOptions');
-    root.classList.remove('hidden');document.querySelector('#interactionLabel').textContent=m.label||'Interact';list.replaceChildren();
-    (m.options||[]).forEach((option,i)=>{const row=document.createElement('div');row.className=`interaction-option ${i+1===m.selected?'active':''}`;const label=document.createElement('span');label.textContent=option.label||`Option ${i+1}`;const count=document.createElement('span');count.textContent=`${i+1}`;row.append(label,count);list.append(row)})
+  if(m.action==='interaction:prompt'){
+    document.querySelector('#interaction').classList.remove('hidden');
+    document.querySelector('#interactionLabel').textContent=m.label||'Interact';
+    document.querySelector('#interactionIcon').textContent=m.icon||'!';
   }
-  if(m.action==='interaction:hide')document.querySelector('#interaction').classList.add('hidden');
+  if(m.action==='interaction:menu:show'){
+    const root=document.querySelector('#interactionMenu'),list=document.querySelector('#interactionOptions');
+    root.classList.remove('hidden');
+    document.querySelector('#interactionMenuTitle').textContent=m.label||'Choose an option';
+    list.replaceChildren();
+    (m.options||[]).forEach((option,i)=>{
+      const row=document.createElement('div');row.className=`interaction-option ${i+1===m.selected?'active':''}`;
+      const label=document.createElement('span');label.textContent=option.label||`Option ${i+1}`;
+      const count=document.createElement('span');count.textContent=i+1===m.selected?'SELECTED':'';
+      row.append(label,count);list.append(row)
+    })
+  }
+  if(m.action==='interaction:menu:hide')document.querySelector('#interactionMenu').classList.add('hidden');
+  if(m.action==='interaction:hide'){
+    document.querySelector('#interaction').classList.add('hidden');
+    document.querySelector('#interactionMenu').classList.add('hidden')
+  }
   if(m.action==='radial:open'){
     radialItems=m.items||[];const root=document.querySelector('#radial'),items=document.querySelector('#radialItems');items.replaceChildren();
     const radius=126,step=(Math.PI*2)/Math.max(1,radialItems.length);
