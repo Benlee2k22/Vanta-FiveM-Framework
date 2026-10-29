@@ -32,7 +32,7 @@ tasks:
   # Download Vanta, then place each resource at the path its resource name expects.
   - action: download_github
     src: https://github.com/Benlee2k22/Vanta-FiveM-Framework
-    ref: feature/interaction-hud-e-menu
+    ref: vanta-next
     dest: ./tmp/vanta
 
   - action: query_database
