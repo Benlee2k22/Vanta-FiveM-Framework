@@ -94,7 +94,7 @@ end)
 
 RegisterNetEvent('vanta:character:create', function(form)
     local src, license = source, licenseFor(source)
-    if not license or type(form) ~= 'table' or Vanta.GetPlayer(src) then return end
+    if not license or type(form) ~= 'table' or exports['vanta-core']:GetPlayerData(src) then return end
     migrateLegacy(license)
     local existing = MySQL.scalar.await('SELECT COUNT(*) FROM vanta_characters WHERE license = ?', { license }) or 0
     existing = tonumber(existing) or 0
@@ -131,7 +131,7 @@ end)
 
 RegisterNetEvent('vanta:character:delete', function(citizenid)
     local src, license = source, licenseFor(source)
-    if not license or type(citizenid) ~= 'string' or Vanta.GetPlayer(src) then return end
+    if not license or type(citizenid) ~= 'string' or exports['vanta-core']:GetPlayerData(src) then return end
     local owned = MySQL.scalar.await('SELECT citizenid FROM vanta_characters WHERE citizenid = ? AND license = ?', { citizenid, license })
     if not owned then return end
     MySQL.query.await('DELETE FROM vanta_bank_transactions WHERE citizenid = ?', { citizenid })
@@ -144,7 +144,7 @@ end)
 
 RegisterNetEvent('vanta:character:requestSpawns', function(citizenid)
     local src, license = source, licenseFor(source)
-    if not license or type(citizenid) ~= 'string' or Vanta.GetPlayer(src) then return end
+    if not license or type(citizenid) ~= 'string' or exports['vanta-core']:GetPlayerData(src) then return end
     migrateLegacy(license)
     local row = MySQL.single.await('SELECT c.citizenid, c.firstname, c.lastname, c.appearance, p.position FROM vanta_characters c JOIN vanta_players p ON p.citizenid = c.citizenid WHERE c.citizenid = ? AND c.license = ?', { citizenid, license })
     if not row then return end
@@ -164,7 +164,7 @@ RegisterNetEvent('vanta:character:chooseSpawn', function(citizenid, spawnId)
     local spawn = spawnId == 'last' and decode(row.position, nil) or VantaCharacterConfig.SpawnPoints[spawnId]
     if type(spawn) ~= 'table' or not tonumber(spawn.x) or not tonumber(spawn.y) or not tonumber(spawn.z) then return end
     local ok = pcall(function() return exports['vanta-core']:LoadCharacter(src, citizenid, license) end)
-    if not ok or not Vanta.GetPlayer(src) then return end
+    if not ok or not exports['vanta-core']:GetPlayerData(src) then return end
     pendingSpawn[src] = nil
     TriggerClientEvent('vanta:character:spawnAt', src, {
         x = tonumber(spawn.x), y = tonumber(spawn.y), z = tonumber(spawn.z), w = tonumber(spawn.w) or 0.0,
