@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vanta Clothing</title><link rel="stylesheet" href="style.css"></head><body>
+<main id="clothing" class="clothing hidden">
+<header><div class="brand"><span class="logo">V</span><span><small>VANTA FRAMEWORK</small><strong id="modeTitle">CLOTHING STORE</strong></span></div><button id="close" aria-label="Close">×</button></header>
+<div class="content"><section class="editor"><div class="intro"><small>APPEARANCE</small><h1>Build your look</h1><p>Choose clothing and save an outfit to this character.</p></div><div class="category-heading"><span id="categoryName">Top</span><span id="categoryCount">1 / 1</span></div><div class="control"><span>Style</span><div><button data-field="drawable" data-delta="-1">−</button><b id="drawableValue">0</b><button data-field="drawable" data-delta="1">+</button></div></div><div class="control"><span>Texture</span><div><button data-field="texture" data-delta="-1">−</button><b id="textureValue">0</b><button data-field="texture" data-delta="1">+</button></div></div><div class="category-list" id="categories"></div>
+<div class="save-row"><input id="outfitName" maxlength="40" placeholder="Outfit name"><button id="save">Save look <small id="priceNote"></small></button></div>
+</section><section class="wardrobe hidden" id="wardrobe"><div class="wardrobe-head"><small>SAVED FOR THIS CHARACTER</small><strong>Your outfits</strong></div><div id="outfitList" class="outfit-list"></div></section></div>
+<footer><span>Preview changes on your character</span><span><kbd>ESC</kbd> CLOSE</span></footer>
+</main><script src="app.js"></script></body></html>
