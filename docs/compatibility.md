@@ -30,6 +30,7 @@ exports['vanta-ui']:AddRadialItem('escort', {
 - Player money and inventory add/remove/lookup operations, and basic job/duty changes
 - Starter `police` and `ambulance` jobs with QBCore-style grade objects
 - Common player loaded/unloaded and money/job change events
+- Client `QBCore:Player:SetPlayerData` updates after money, job, metadata and inventory changes
 
 ## Known limitations
 
