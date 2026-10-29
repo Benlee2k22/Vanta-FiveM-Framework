@@ -65,6 +65,8 @@ RegisterNetEvent('vanta:clothing:saveOutfit', function(label, appearance, mode)
     local data = exports['vanta-core']:GetPlayerData(src)
     if not data then return end
     mode = mode == 'shop' and 'shop' or 'wardrobe'
+    local appearanceData = cleanAppearance(appearance)
+    if not appearanceData then return end
     if mode == 'shop' then
         if not closeTo(src, VantaClothingConfig.Shops) then return end
         if not exports['vanta-core']:RemoveMoney(src, 'cash', VantaClothingConfig.ShopPrice, 'clothing') then
@@ -72,9 +74,6 @@ RegisterNetEvent('vanta:clothing:saveOutfit', function(label, appearance, mode)
             return
         end
     elseif not closeTo(src, VantaClothingConfig.Wardrobes) then return end
-
-    local appearanceData = cleanAppearance(appearance)
-    if not appearanceData then return end
     label = type(label) == 'string' and label:gsub('[^%w%s%-]', ''):gsub('^%s+', ''):gsub('%s+$', '') or 'Saved outfit'
     if #label < 2 then label = 'Saved outfit' end
     label = label:sub(1, 40)
