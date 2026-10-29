@@ -5,16 +5,6 @@ RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) if type(data) == 
 RegisterNetEvent('vanta:client:loaded', function(data)
     PlayerData = data or {}
     TriggerEvent('Vanta:Client:OnPlayerLoaded', PlayerData)
-    CreateThread(function()
-        while not NetworkIsPlayerActive(PlayerId()) do Wait(250) end
-        local pos = PlayerData.position
-        if pos and pos.x and pos.y and pos.z then
-            DoScreenFadeOut(250); Wait(350)
-            local ped = PlayerPedId()
-            if IsEntityDead(ped) then NetworkResurrectLocalPlayer(pos.x, pos.y, pos.z, pos.w or 0.0, true, false) else SetEntityCoordsNoOffset(ped, pos.x, pos.y, pos.z, false, false, false) end
-            SetEntityHeading(PlayerPedId(), pos.w or 0.0); DoScreenFadeIn(500)
-        end
-    end)
 end)
 RegisterNetEvent('vanta:client:moneyChanged', function(kind, amount, action, reason)
     if PlayerData.money then PlayerData.money[kind] = amount end
@@ -48,5 +38,5 @@ exports('Notify', VantaClient.Notify)
 exports('Progressbar', VantaClient.Progressbar)
 
 CreateThread(function()
-    while true do Wait(30000); if next(PlayerData) then TriggerServerEvent('vanta:server:savePosition') end end
+    while true do Wait(30000); if PlayerData.citizenid and LocalPlayer.state.vantaSpawned then TriggerServerEvent('vanta:server:savePosition') end end
 end)
