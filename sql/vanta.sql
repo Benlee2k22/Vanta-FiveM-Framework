@@ -32,3 +32,29 @@ CREATE TABLE IF NOT EXISTS `vanta_inventories` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`citizenid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `vanta_characters` (
+  `citizenid` varchar(50) NOT NULL,
+  `license` varchar(80) NOT NULL,
+  `slot` int NOT NULL,
+  `firstname` varchar(32) NOT NULL,
+  `lastname` varchar(32) NOT NULL,
+  `birthdate` varchar(10) NOT NULL,
+  `gender` tinyint NOT NULL DEFAULT 0,
+  `nationality` varchar(32) NOT NULL DEFAULT 'American',
+  `appearance` longtext DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`citizenid`),
+  UNIQUE KEY `uq_vanta_character_slot` (`license`, `slot`),
+  KEY `idx_vanta_character_license` (`license`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `vanta_outfits` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `citizenid` varchar(50) NOT NULL,
+  `label` varchar(40) NOT NULL,
+  `appearance` longtext NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_vanta_outfit_citizen` (`citizenid`, `id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
