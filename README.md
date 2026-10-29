@@ -44,4 +44,3 @@ ensure qb-core
 ## License
 
 MIT. See [LICENSE](LICENSE).
-

@@ -1,0 +1,14 @@
+# Local FXServer and database settings
+server.cfg
+*.env
+*.log
+logs/
+cache/
+server-cache/
+server-cache-priv/
+
+# Editor and OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vanta UI</title><link rel="stylesheet" href="style.css"></head>
+<body>
+  <main id="editor" class="editor hidden" aria-label="Vanta appearance editor">
+    <div class="panel">
+      <header><div class="brand"><span class="brand-mark">V</span><div><p class="eyebrow">VANTA FRAMEWORK</p><h1>Appearance</h1></div></div><button class="icon-button" id="close" aria-label="Close">×</button></header>
+      <p class="subhead">Tune the look of your in-game interface.</p>
+      <section class="preview"><div class="preview-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="preview-label">LIVE PREVIEW</span></div><div class="preview-content"><div class="preview-icon">✦</div><div><strong>Interface updated</strong><p>Your chosen theme appears across Vanta UI.</p></div></div><button class="preview-action">Continue</button></section>
+      <div class="section-title"><h2>Presets</h2><span>Choose a starting point</span></div>
+      <div class="presets"><button data-preset="midnight"><i style="--swatch:#8b7bff"></i>Midnight</button><button data-preset="emerald"><i style="--swatch:#35d39a"></i>Emerald</button><button data-preset="synthwave"><i style="--swatch:#ff63cb"></i>Synthwave</button><button data-preset="ice"><i style="--swatch:#58c7ff"></i>Ice</button></div>
+      <div class="section-title controls-title"><h2>Customise</h2><span>Changes save for this session</span></div>
+      <label class="control-row">Accent colour<input id="accent" type="color" value="#8b7bff"></label><label class="control-row">Panel colour<input id="surface" type="color" value="#11131b"></label>
+      <label class="control-row slider-row">Corner roundness<input id="radius" type="range" min="4" max="24" value="16"><b id="radiusValue">16</b></label><label class="control-row slider-row">Interface scale<input id="scale" type="range" min="80" max="120" value="100"><b id="scaleValue">100%</b></label>
+      <footer><span>Changes apply instantly</span><button class="save-button" id="done">Done <span>↗</span></button></footer>
+    </div>
+  </main>
+  <aside id="notifications" class="notifications" aria-live="polite"></aside>
+  <section id="interaction" class="interaction hidden"><div class="interaction-heading"><span class="keycap">E</span><div><strong id="interactionLabel">Interact</strong><small>SCROLL TO SELECT · PRESS E</small></div></div><div id="interactionOptions" class="interaction-options"></div></section>
+  <main id="radial" class="radial hidden"><div class="radial-wheel"><div class="radial-center"><span>V</span><small>QUICK ACTIONS</small></div><div id="radialItems"></div></div><p class="radial-hint">SELECT AN ACTION · ESC TO CLOSE</p></main>
+  <div id="progress" class="progress-wrap hidden"><div class="progress-card"><div class="progress-copy"><span id="progressLabel">Working…</span><b id="progressPercent">0%</b></div><div class="progress-track"><i id="progressFill"></i></div><small>PLEASE WAIT</small></div></div>
+  <script src="app.js"></script>
+</body></html>

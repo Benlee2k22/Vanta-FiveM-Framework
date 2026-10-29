@@ -1,0 +1,14 @@
+set onesync on
+set mysql_connection_string "mysql://user:password@127.0.0.1/vanta?charset=utf8mb4"
+
+ensure oxmysql
+ensure vanta-core
+ensure vanta-ui
+ensure qb-core
+
+# Start framework-dependent resources after the bridge.
+# ensure your_inventory
+
+# Example ACE grants. Change identifiers and permissions for your server.
+add_ace group.admin vanta.admin allow
+add_ace group.admin command allow
