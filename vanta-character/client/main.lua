@@ -39,6 +39,7 @@ local function applyAppearance(appearance)
     if type(appearance) ~= 'table' then return end
     local ped = PlayerPedId()
     local model = tonumber(appearance.model)
+    if not model and appearance.gender ~= nil then model = GetHashKey(tonumber(appearance.gender) == 1 and 'mp_f_freemode_01' or 'mp_m_freemode_01') end
     if model and IsModelInCdimage(model) and IsModelValid(model) then
         RequestModel(model)
         local timeout = GetGameTimer() + 8000
