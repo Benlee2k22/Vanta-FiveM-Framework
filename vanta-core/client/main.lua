@@ -4,7 +4,12 @@ RegisterNetEvent('QBCore:Player:SetPlayerData', function(data) if type(data) == 
 
 RegisterNetEvent('vanta:client:loaded', function(data)
     PlayerData = data or {}
+end)
+RegisterNetEvent('vanta:client:spawned', function()
     TriggerEvent('Vanta:Client:OnPlayerLoaded', PlayerData)
+    TriggerEvent('QBCore:Client:OnPlayerLoaded')
+    TriggerEvent('QBCore:Player:SetPlayerData', PlayerData)
+    TriggerServerEvent('vanta:server:finishSpawn')
 end)
 RegisterNetEvent('vanta:client:moneyChanged', function(kind, amount, action, reason)
     if PlayerData.money then PlayerData.money[kind] = amount end
