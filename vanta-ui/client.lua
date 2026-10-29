@@ -2,6 +2,7 @@ local theme = { accent = '#8b7bff', surface = '#11131b', radius = 16, scale = 10
 local activeProgress, radialOpen = false, false
 local interactions, radialItems = {}, {}
 local activeInteraction, selection, sentSelection = nil, 1, nil
+local interactionMenuOpen = false
 local function setFocus(value) SetNuiFocus(value, value); SetNuiFocusKeepInput(false) end
 
 RegisterCommand('uitheme', function()
@@ -35,7 +36,7 @@ exports('AddInteraction', function(id, data)
     if type(id) ~= 'string' or type(data) ~= 'table' or type(data.coords) ~= 'table' then return false end
     local options = {}
     for _, option in ipairs(data.options or {}) do options[#options + 1] = option end
-    interactions[id] = { coords = vector3(data.coords.x or 0, data.coords.y or 0, data.coords.z or 0), distance = tonumber(data.distance) or 2.0, label = data.label or 'Interact', options = options }
+    interactions[id] = { coords = vector3(data.coords.x or 0, data.coords.y or 0, data.coords.z or 0), distance = tonumber(data.distance) or 2.0, label = data.label or 'Interact', icon = data.icon or '!', options = options }
     return true
 end)
 exports('RemoveInteraction', function(id) interactions[id] = nil end)
@@ -90,6 +91,14 @@ end)
 RegisterKeyMapping('uitheme', 'Open Vanta theme editor', 'keyboard', '')
 AddEventHandler('onResourceStop', function(resource) if resource == GetCurrentResourceName() then setFocus(false) end end)
 
+local function closeInteractionMenu()
+    if interactionMenuOpen then
+        interactionMenuOpen = false
+        sentSelection = nil
+        SendNUIMessage({ action = 'interaction:menu:hide' })
+    end
+end
+
 CreateThread(function()
     while true do
         local waitTime, ped = 500, PlayerPedId()
@@ -98,27 +107,46 @@ CreateThread(function()
             local distance = #(position - entry.coords)
             if distance <= entry.distance and distance < nearestDistance then nearest, nearestDistance = id, distance end
         end
-        if nearest and not radialOpen then
+
+        if nearest and not radialOpen and not IsNuiFocused() then
             waitTime = 0
             local entry = interactions[nearest]
-            if activeInteraction ~= nearest then activeInteraction, selection, sentSelection = nearest, 1, nil end
+            if activeInteraction ~= nearest then
+                closeInteractionMenu()
+                activeInteraction, selection, sentSelection = nearest, 1, nil
+                SendNUIMessage({ action = 'interaction:prompt', label = entry.label, icon = entry.icon })
+            end
+
             if #entry.options > 0 then
                 DisableControlAction(0, 38, true)
                 DisableControlAction(0, 241, true)
                 DisableControlAction(0, 242, true)
-                if IsDisabledControlJustPressed(0, 241) then selection = selection <= 1 and #entry.options or selection - 1 end
-                if IsDisabledControlJustPressed(0, 242) then selection = selection >= #entry.options and 1 or selection + 1 end
-                selection = math.min(selection, #entry.options)
-                if sentSelection ~= selection then
+                if interactionMenuOpen then DisableControlAction(0, 202, true) end
+
+                if interactionMenuOpen then
+                    if IsDisabledControlJustPressed(0, 241) then selection = selection <= 1 and #entry.options or selection - 1 end
+                    if IsDisabledControlJustPressed(0, 242) then selection = selection >= #entry.options and 1 or selection + 1 end
+                    selection = math.min(selection, #entry.options)
+
+                    if sentSelection ~= selection then
+                        sentSelection = selection
+                        SendNUIMessage({ action = 'interaction:menu:show', label = entry.label, options = entry.options, selected = selection })
+                    end
+
+                    if IsDisabledControlJustPressed(0, 38) then
+                        runOption(entry.options[selection])
+                        closeInteractionMenu()
+                    elseif IsDisabledControlJustPressed(0, 202) then
+                        closeInteractionMenu()
+                    end
+                elseif IsDisabledControlJustPressed(0, 38) then
+                    interactionMenuOpen, selection, sentSelection = true, 1, nil
+                    SendNUIMessage({ action = 'interaction:menu:show', label = entry.label, options = entry.options, selected = selection })
                     sentSelection = selection
-                    SendNUIMessage({ action = 'interaction:show', label = entry.label, options = entry.options, selected = selection })
-                end
-                if IsDisabledControlJustPressed(0, 38) then
-                    if #entry.options == 1 then runOption(entry.options[1])
-                    else runOption(entry.options[selection]) end
                 end
             end
         elseif activeInteraction then
+            closeInteractionMenu()
             activeInteraction, sentSelection = nil, nil
             SendNUIMessage({ action = 'interaction:hide' })
         end
