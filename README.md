@@ -15,7 +15,7 @@ Vanta is an original FiveM roleplay framework foundation with a modern, themeabl
 - `vanta-inventory`: persistent slot inventory with usable food, water and bandages.
 - `vanta-character`: per-license character slots, character creation/deletion, character-specific data, and a last-location/preset spawn selector.
 - `vanta-clothing`: component/prop clothing editor, paid clothing-store purchases, saved character outfits, and wardrobes.
-- `vanta-loading`: branded loading screen, connection progress, rotating tips, and optional generated ambient music.
+- `vanta-loading`: branded loading screen, connection progress, rotating tips, and optional synthesized ambient music.
 - Bottom-left boxed E interaction prompt that opens a scrollable options menu; the F1 radial remains for quick actions.
 - SQL schema and example `server.cfg`.
 
@@ -33,7 +33,7 @@ Vanta includes a txAdmin remote recipe that installs the framework resources, ox
 1. In txAdmin, open the Recipe Deployer and choose the option to enter a remote recipe URL.
 2. Paste this URL:
 
-   `https://raw.githubusercontent.com/Benlee2k22/Vanta-FiveM-Framework/feature/interaction-hud-e-menu/recipe.yaml`
+   `https://raw.githubusercontent.com/Benlee2k22/Vanta-FiveM-Framework/vanta-next/recipe.yaml`
 
 3. Review the recipe, then continue to the inputs. Enter your Cfx server key and the details for a MySQL/MariaDB database that the server can reach.
 4. Run the recipe. It creates a new server profile, imports the Vanta tables, and downloads the new character, clothing and loading resources.
