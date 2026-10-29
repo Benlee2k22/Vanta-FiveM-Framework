@@ -20,6 +20,7 @@ function Player:AddMoney(kind, amount, reason)
     if amount <= 0 or self.PlayerData.money[kind] == nil then return false end
     self.PlayerData.money[kind] = self:GetMoney(kind) + amount
     TriggerClientEvent('vanta:client:moneyChanged', self.source, kind, self:GetMoney(kind), 'add', reason or 'unknown')
+    TriggerClientEvent('QBCore:Player:SetPlayerData', self.source, copy(self.PlayerData))
     TriggerEvent('vanta:server:moneyChanged', self.source, kind, amount, 'add', reason or 'unknown')
     return true
 end
@@ -28,6 +29,7 @@ function Player:RemoveMoney(kind, amount, reason)
     if amount <= 0 or self.PlayerData.money[kind] == nil or self:GetMoney(kind) < amount then return false end
     self.PlayerData.money[kind] = self:GetMoney(kind) - amount
     TriggerClientEvent('vanta:client:moneyChanged', self.source, kind, self:GetMoney(kind), 'remove', reason or 'unknown')
+    TriggerClientEvent('QBCore:Player:SetPlayerData', self.source, copy(self.PlayerData))
     TriggerEvent('vanta:server:moneyChanged', self.source, kind, amount, 'remove', reason or 'unknown')
     return true
 end
@@ -37,6 +39,7 @@ function Player:SetMoney(kind, amount, reason)
     local delta = amount - self:GetMoney(kind)
     self.PlayerData.money[kind] = amount
     TriggerClientEvent('vanta:client:moneyChanged', self.source, kind, amount, 'set', reason or 'unknown')
+    TriggerClientEvent('QBCore:Player:SetPlayerData', self.source, copy(self.PlayerData))
     TriggerEvent('vanta:server:moneyChanged', self.source, kind, delta, 'set', reason or 'unknown')
     return true
 end
@@ -52,6 +55,7 @@ function Player:SetJob(name, grade)
         isboss = rank.isboss == true,
     }
     TriggerClientEvent('vanta:client:jobUpdated', self.source, self.PlayerData.job)
+    TriggerClientEvent('QBCore:Player:SetPlayerData', self.source, copy(self.PlayerData))
     TriggerClientEvent('QBCore:Client:OnJobUpdate', self.source, self.PlayerData.job)
     TriggerEvent('vanta:server:jobUpdated', self.source, self.PlayerData.job)
     return true
@@ -59,11 +63,15 @@ end
 function Player:SetDuty(value)
     self.PlayerData.job.onduty = value == true
     TriggerClientEvent('vanta:client:jobUpdated', self.source, self.PlayerData.job)
+    TriggerClientEvent('QBCore:Player:SetPlayerData', self.source, copy(self.PlayerData))
     TriggerClientEvent('QBCore:Client:SetDuty', self.source, self.PlayerData.job.onduty)
     TriggerEvent('vanta:server:dutyUpdated', self.source, self.PlayerData.job.onduty)
     return self.PlayerData.job.onduty
 end
-function Player:SetMetaData(key, value) self.PlayerData.metadata[key] = value end
+function Player:SetMetaData(key, value)
+    self.PlayerData.metadata[key] = value
+    TriggerClientEvent('QBCore:Player:SetPlayerData', self.source, copy(self.PlayerData))
+end
 function Player:GetItemByName(name)
     for _, item in ipairs(self.PlayerData.inventory) do if item.name == name then return copy(item) end end
     return nil
@@ -77,7 +85,12 @@ function Player:AddItem(name, amount, slot, info)
     if currentWeight + (definition.weight or 0) * amount > VantaConfig.Inventory.maxWeight then return false end
     if not definition.unique then
         for _, item in ipairs(inventory) do
-            if item.name == name and (not slot or tonumber(slot) == item.slot) then item.amount = item.amount + amount; TriggerClientEvent('vanta:client:inventoryUpdated', self.source, copy(inventory)); return true end
+            if item.name == name and (not slot or tonumber(slot) == item.slot) then
+                item.amount = item.amount + amount
+                TriggerClientEvent('vanta:client:inventoryUpdated', self.source, copy(inventory))
+                TriggerClientEvent('QBCore:Player:SetPlayerData', self.source, copy(self.PlayerData))
+                return true
+            end
         end
     end
     local used = {}; for _, item in ipairs(inventory) do used[item.slot] = true end
@@ -88,6 +101,7 @@ function Player:AddItem(name, amount, slot, info)
     local item = copy(definition); item.amount = amount; item.slot = slot; item.info = info or {}
     inventory[#inventory + 1] = item
     TriggerClientEvent('vanta:client:inventoryUpdated', self.source, copy(inventory))
+    TriggerClientEvent('QBCore:Player:SetPlayerData', self.source, copy(self.PlayerData))
     return true
 end
 function Player:RemoveItem(name, amount, slot)
@@ -105,6 +119,7 @@ function Player:RemoveItem(name, amount, slot)
         end
     end
     TriggerClientEvent('vanta:client:inventoryUpdated', self.source, copy(inventory))
+    TriggerClientEvent('QBCore:Player:SetPlayerData', self.source, copy(self.PlayerData))
     return true
 end
 function Player:Save()
@@ -143,6 +158,7 @@ local function makePlayer(src, row)
     local p = setmetatable({ source = src, PlayerData = data }, Player)
     Vanta.Players[src] = p
     TriggerClientEvent('vanta:client:loaded', src, copy(data))
+    TriggerClientEvent('QBCore:Player:SetPlayerData', src, copy(data))
     TriggerEvent('vanta:server:playerLoaded', src, p)
     TriggerClientEvent('QBCore:Client:OnPlayerLoaded', src)
     log(('%s loaded (%s)'):format(data.name, data.citizenid))
