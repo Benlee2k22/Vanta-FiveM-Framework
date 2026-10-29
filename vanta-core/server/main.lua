@@ -152,15 +152,13 @@ local function makePlayer(src, row, accountLicense)
     else
         data.job = copy(VantaConfig.DefaultJob)
     end
-    for key, value in pairs({ hunger = 100, thirst = 100, stress = 0, isdead = false, inlaststand = false }) do
+    for key, value in pairs({ hunger = 100, thirst = 100, stress = 0, isdead = false, inlaststand = false, loggedIn = false }) do
         if data.metadata[key] == nil then data.metadata[key] = value end
     end
     local p = setmetatable({ source = src, PlayerData = data }, Player)
     Vanta.Players[src] = p
     TriggerClientEvent('vanta:client:loaded', src, copy(data))
     TriggerClientEvent('QBCore:Player:SetPlayerData', src, copy(data))
-    TriggerEvent('vanta:server:playerLoaded', src, p)
-    TriggerClientEvent('QBCore:Client:OnPlayerLoaded', src)
     log(('%s loaded (%s)'):format(data.name, data.citizenid))
 end
 
@@ -183,6 +181,14 @@ AddEventHandler('playerDropped', function()
         p:Save(); TriggerEvent('vanta:server:playerUnloaded', src, p); TriggerClientEvent('QBCore:Client:OnPlayerUnload', src); Vanta.Players[src] = nil
     end
 end)
+RegisterNetEvent('vanta:server:finishSpawn', function()
+    local src, player = source, Vanta.GetPlayer(source)
+    if not player or player.PlayerData.metadata.loggedIn then return end
+    player.PlayerData.metadata.loggedIn = true
+    TriggerEvent('vanta:server:playerLoaded', src, player)
+    TriggerClientEvent('QBCore:Client:OnPlayerLoaded', src)
+end)
+
 RegisterNetEvent('vanta:server:savePosition', function()
     local src, player = source, Vanta.GetPlayer(source)
     if not player then return end
