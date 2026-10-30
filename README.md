@@ -12,7 +12,7 @@ The txAdmin recipe is based on the [QBCore txAdmin recipe](https://github.com/qb
 
 The QBCore recipe keeps its radial menu on **F1** and sets `UseTarget false`. Vanta's proximity interactions use E and the mouse wheel; they do not require a target eye.
 
-The current Vanta add-on set is an early access foundation. The Vanta banking resource replaces the QBCore recipe's `qb-banking`; QBCore's other included resources provide the standard character, spawn, clothing, police, EMS and inventory flows while Vanta-specific versions are built.
+The current Vanta add-on set is an early access foundation. The recipe removes `qb-banking` and uses Vanta banking in its place; QBCore's other included resources provide the standard character, spawn, clothing, police, EMS and inventory flows. Older experimental custom-core resources in this repository are not installed by this recipe and should not be ensured alongside QBCore.
 
 ## Install with txAdmin
 
