@@ -25,11 +25,11 @@ local function openRadial()
     local entries = {}
     for id, item in pairs(radialItems) do entries[#entries + 1] = { id = id, label = item.label, icon = item.icon or '•' } end
     table.sort(entries, function(a, b) return a.id < b.id end)
-    if #entries == 0 then TriggerEvent('vanta:ui:notify', { title = 'Quick actions', description = 'No radial actions are registered.', type = 'info' }); return end
+    if #entries == 0 then TriggerEvent('vanta:ui:notify', { title = 'Quick actions', description = 'No Vanta quick actions are registered.', type = 'info' }); return end
     radialOpen = true; SetNuiFocus(true, true); SendNUIMessage({ action = 'radial:open', items = entries })
 end
 RegisterCommand('vantaradial', openRadial, false)
-RegisterKeyMapping('vantaradial', 'Open Vanta quick actions', 'keyboard', 'F1')
+RegisterKeyMapping('vantaradial', 'Open Vanta add-on quick actions', 'keyboard', 'F2')
 exports('AddRadialItem', function(id, item) if type(id) == 'string' and type(item) == 'table' then radialItems[id] = item end end)
 exports('RemoveRadialItem', function(id) radialItems[id] = nil end)
 exports('AddInteraction', function(id, data)
