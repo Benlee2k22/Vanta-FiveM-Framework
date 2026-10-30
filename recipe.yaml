@@ -430,9 +430,6 @@ tasks:
   - action: remove_path
     path: ./resources/[qb]/qb-banking
 
-  # Vanta provides the E interaction menu and F1 radial, so remove the duplicate QBCore radial.
-  - action: remove_path
-    path: ./resources/[qb]/qb-radialmenu
 
   - action: ensure_dir
     path: ./resources/[vanta]
