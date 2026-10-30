@@ -6,7 +6,7 @@ The txAdmin recipe installs QBCore and its standard resources. The QBCore resour
 
 ## Vanta interaction UI
 
-The Vanta UI displays a boxed prompt near the bottom-left when a registered location is close. Press **E** to open its options, scroll with the mouse wheel, and press **E** to activate the selected action. The UI resource exposes `exports['vanta-ui']:AddInteraction(id, data)` and `RemoveInteraction(id)` for add-on scripts.
+The Vanta UI displays a boxed prompt near the bottom-left when a registered location is close. Press **E** or **Enter** to open its options, scroll with the mouse wheel, and press **E** or **Enter** to activate the selected action. The UI resource exposes `exports['vanta-ui']:AddInteraction(id, data)` and `RemoveInteraction(id)` for add-on scripts.
 
 The QBCore recipe sets `UseTarget false`, so the target eye is disabled. QBCore's existing radial menu remains on **F1**. Optional Vanta-specific radial actions can be registered through `AddRadialItem` and opened with **F2**.
 
