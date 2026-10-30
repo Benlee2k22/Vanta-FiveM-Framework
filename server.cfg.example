@@ -1,21 +1,21 @@
+# QBCore base resources come from the QBCore txAdmin recipe.
 set onesync on
-set mysql_connection_string "mysql://user:password@127.0.0.1/vanta?charset=utf8mb4"
+set mysql_connection_string "mysql://user:password@127.0.0.1/qbcore?charset=utf8mb4"
 
 ensure oxmysql
-ensure vanta-loading
-ensure vanta-core
-ensure vanta-ui
-ensure vanta-character
-ensure vanta-clothing
-ensure vanta-banking
-ensure vanta-police
-ensure vanta-hospital
 ensure qb-core
-ensure vanta-inventory
+ensure [qb]
+ensure [standalone]
+ensure [voice]
+ensure [defaultmaps]
 
-# Start framework-dependent resources after the bridge.
-# ensure your_inventory
+# Vanta QBCore add-ons
+ensure vanta-loading
+ensure vanta-ui
+ensure vanta-banking
+
+# The QBCore recipe sets this to false for E-key interaction instead of target eye.
+setr UseTarget false
 
 # Example ACE grants. Change identifiers and permissions for your server.
-add_ace group.admin vanta.admin allow
 add_ace group.admin command allow
