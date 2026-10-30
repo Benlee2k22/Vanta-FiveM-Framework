@@ -5,7 +5,7 @@ Use a private FXServer and a test database. Install with the `qbcore-suite` reci
 1. Check the txAdmin console and confirm oxmysql, QBCore and the Vanta resources start without errors.
 2. Join and confirm the Vanta loading screen appears during connection and closes when QBCore opens character selection.
 3. Create or select a character in QBCore's character selector, choose a spawn, and confirm that the player enters the world.
-4. Walk near a Vanta bank or ATM. Confirm the boxed prompt appears, press **E**, scroll through the options, and press **E** to open the bank.
+4. Walk near a Vanta bank or ATM. Confirm the boxed prompt appears, press **E** or **Enter**, scroll through the options, then press **E** or **Enter** to open the bank.
 5. Deposit a small amount, withdraw part of it, and check that QBCore cash/bank balances and Vanta transaction history update.
 6. Connect a second test player. At a bank branch, send a small transfer using their citizen ID and verify both balances and ledger entries.
 7. Press **F1** and confirm QBCore's radial menu opens. Press **F2** and confirm the Vanta radial gives a message when no add-on actions are registered.
