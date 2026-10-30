@@ -1,103 +1,453 @@
 $engine: 3
 $onesync: on
-
-name: Vanta FiveM Framework
-version: 0.1.0
+name: Vanta QBCore Server
+version: 1.0.0
 author: Vanta
-description: Early access Vanta framework with banking, police, hospital, inventory, E interactions, and a QBCore compatibility bridge.
+description: Upstream QBCore with Vanta interaction UI and loading screen
 
 tasks:
-  # txAdmin asks for database credentials and creates/selects the database.
-  - action: connect_database
+  #  Download Base Files
+  - action: download_github
+    src: https://github.com/qbcore-fivem/txAdminRecipe
+    ref: main
+    dest: ./tmp/qbcore
 
-  # Import the Cfx default server resources and remove the legacy chat resource.
+  - action: move_path
+    src: ./tmp/qbcore/server.cfg
+    dest: ./server.cfg
+
+  - action: move_path
+    src: ./tmp/qbcore/myLogo.png
+    dest: ./myLogo.png
+
+  # Prepare Database
+  - action: connect_database
+  - action: query_database
+    file: ./tmp/qbcore/qbcore.sql
+
+  # STANDALONE
   - action: download_github
     src: https://github.com/citizenfx/cfx-server-data
-    ref: master
     subpath: resources
     dest: ./resources/[cfx-default]
-
   - action: remove_path
     path: ./resources/[cfx-default]/[gameplay]/chat
 
-  # Download the official oxmysql release.
   - action: download_file
-    url: https://github.com/overextended/oxmysql/releases/download/v2.14.3/oxmysql.zip
-    path: ./tmp/oxmysql.zip
-
+    path: ./tmp/files/oxmysql.zip
+    url: https://github.com/overextended/oxmysql/releases/download/v2.14.1/oxmysql.zip
   - action: unzip
-    src: ./tmp/oxmysql.zip
     dest: ./resources/[standalone]
+    src: ./tmp/files/oxmysql.zip
 
-  # Download Vanta, then place each resource at the path its resource name expects.
+  - action: download_file
+    path: ./tmp/menuv.zip
+    url: https://github.com/ThymonA/menuv/releases/download/v1.4.1/menuv_v1.4.1.zip
+  - action: unzip
+    dest: ./resources/[standalone]/menuv
+    src: ./tmp/menuv.zip
+
+  - action: download_github
+    dest: ./resources/[standalone]/bob74_ipl
+    ref: master
+    src: https://github.com/qbcore-fivem/bob74_ipl
+
+  - action: download_github
+    dest: ./resources/[standalone]/safecracker
+    ref: main
+    src: https://github.com/qbcore-fivem/safecracker
+
+  - action: download_file
+    path: ./tmp/files/screencapture.zip
+    url: https://github.com/itschip/screencapture/releases/latest/download/screencapture.zip
+  - action: unzip
+    dest: ./resources/[standalone]
+    src: ./tmp/files/screencapture.zip
+
+  - action: download_github
+    dest: ./resources/[standalone]/progressbar
+    ref: main
+    src: https://github.com/qbcore-fivem/progressbar
+
+  - action: download_github
+    dest: ./resources/[standalone]/interact-sound
+    ref: master
+    src: https://github.com/qbcore-fivem/interact-sound
+
+  - action: download_github
+    dest: ./resources/[standalone]/connectqueue
+    ref: master
+    src: https://github.com/qbcore-fivem/connectqueue
+
+  - action: download_github
+    dest: ./resources/[standalone]/PolyZone
+    ref: master
+    src: https://github.com/qbcore-fivem/PolyZone
+
+  - action: waste_time # prevent github throttling
+    seconds: 10
+
+    # VOICE
+  - action: download_github
+    dest: ./resources/[voice]/pma-voice
+    ref: main
+    src: https://github.com/AvarianKnight/pma-voice
+
+  - action: download_github
+    dest: ./resources/[voice]/qb-radio
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-radio
+
+    # MAPS
+  - action: download_github
+    dest: ./resources/[defaultmaps]/hospital_map
+    ref: main
+    src: https://github.com/qbcore-fivem/hospital_map
+
+  - action: download_github
+    dest: ./resources/[defaultmaps]/dealer_map
+    ref: main
+    src: https://github.com/qbcore-fivem/dealer_map
+
+  - action: download_github
+    dest: ./resources/[defaultmaps]/[prison_map]
+    ref: main
+    src: https://github.com/qbcore-fivem/prison_map
+
+  - action: waste_time # prevent github throttling
+    seconds: 10
+
+  # Downloading QBCore resources
+  - action: download_github
+    dest: ./resources/[qb]/qb-core
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-core
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-scoreboard
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-scoreboard
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-adminmenu
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-adminmenu
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-multicharacter
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-multicharacter
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-target
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-target
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-vehiclesales
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-vehiclesales
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-vehicleshop
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-vehicleshop
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-houserobbery
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-houserobbery
+
+  - action: waste_time # prevent github throttling
+    seconds: 10
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-prison
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-prison
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-hud
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-hud
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-management
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-management
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-weed
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-weed
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-lapraces
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-lapraces
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-inventory
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-inventory
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-houses
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-houses
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-garages
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-garages
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-ambulancejob
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-ambulancejob
+
+  - action: waste_time # prevent github throttling
+    seconds: 10
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-radialmenu
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-radialmenu
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-crypto
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-crypto
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-weathersync
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-weathersync
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-policejob
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-policejob
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-apartments
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-apartments
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-vehiclekeys
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-vehiclekeys
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-mechanicjob
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-mechanicjob
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-phone
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-phone
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-vineyard
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-vineyard
+
+  - action: waste_time # prevent github throttling
+    seconds: 10
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-weapons
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-weapons
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-scrapyard
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-scrapyard
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-towjob
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-towjob
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-streetraces
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-streetraces
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-storerobbery
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-storerobbery
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-spawn
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-spawn
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-smallresources
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-smallresources
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-recyclejob
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-recyclejob
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-crafting
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-crafting
+
+  - action: waste_time # prevent github throttling
+    seconds: 10
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-diving
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-diving
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-cityhall
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-cityhall
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-truckrobbery
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-truckrobbery
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-pawnshop
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-pawnshop
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-minigames
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-minigames
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-taxijob
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-taxijob
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-busjob
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-busjob
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-newsjob
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-newsjob
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-fuel
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-fuel
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-jewelery
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-jewelery
+
+  - action: waste_time # prevent github throttling
+    seconds: 10
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-bankrobbery
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-bankrobbery
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-banking
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-banking
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-clothing
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-clothing
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-hotdogjob
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-hotdogjob
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-doorlock
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-doorlock
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-garbagejob
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-garbagejob
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-drugs
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-drugs
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-shops
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-shops
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-interior
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-interior
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-menu
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-menu
+
+  - action: waste_time # prevent github throttling
+    seconds: 10
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-input
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-input
+
+  - action: download_github
+    dest: ./resources/[qb]/qb-loading
+    ref: main
+    src: https://github.com/qbcore-fivem/qb-loading
+
+  # Vanta UI and loading-screen add-ons
   - action: download_github
     src: https://github.com/Benlee2k22/Vanta-FiveM-Framework
     ref: main
     dest: ./tmp/vanta
 
-  - action: query_database
-    file: ./tmp/vanta/sql/vanta.sql
-
   - action: ensure_dir
     path: ./resources/[vanta]
 
   - action: move_path
-    src: ./tmp/vanta/vanta-core
-    dest: ./resources/[vanta]/vanta-core
+    src: ./tmp/vanta/vanta-loading
+    dest: ./resources/[vanta]/vanta-loading
 
   - action: move_path
     src: ./tmp/vanta/vanta-ui
     dest: ./resources/[vanta]/vanta-ui
-
-  - action: move_path
-    src: ./tmp/vanta/vanta-banking
-    dest: ./resources/[vanta]/vanta-banking
-
-  - action: move_path
-    src: ./tmp/vanta/vanta-police
-    dest: ./resources/[vanta]/vanta-police
-
-  - action: move_path
-    src: ./tmp/vanta/vanta-hospital
-    dest: ./resources/[vanta]/vanta-hospital
-
-  - action: move_path
-    src: ./tmp/vanta/vanta-inventory
-    dest: ./resources/[vanta]/vanta-inventory
-
-  # Keep this resource name so scripts using exports['qb-core'] can find the bridge.
-  - action: move_path
-    src: ./tmp/vanta/qb-core
-    dest: ./resources/[vanta]/qb-core
-
-  # Start the default game resources, then the database driver and Vanta modules.
-  - action: download_file
-    url: https://raw.githubusercontent.com/citizenfx/txAdmin-recipes/main/default-fivem/server.cfg
-    path: ./server.cfg
 
   - action: write_file
     file: ./server.cfg
     append: true
     data: |
 
-      # Vanta Framework
-      sv_hostname "{{serverName}} | Vanta Framework"
-      sets sv_projectName "Vanta Framework"
-      sets sv_projectDesc "Vanta early access roleplay framework"
-      set mysql_connection_string "{{dbConnectionString}}"
-
-      ensure oxmysql
-      ensure vanta-core
+      # Vanta UI add-ons
+      setr UseTarget false
+      ensure vanta-loading
       ensure vanta-ui
-      ensure vanta-banking
-      ensure vanta-police
-      ensure vanta-hospital
-      ensure qb-core
-      ensure vanta-inventory
 
-      add_ace group.admin vanta.admin allow
-
-      # Add framework-dependent resources below this line.
-
+  # Clean up
   - action: remove_path
     path: ./tmp

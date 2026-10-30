@@ -1,18 +1,16 @@
+# QBCore resources and database are installed by the txAdmin recipe.
 set onesync on
-set mysql_connection_string "mysql://user:password@127.0.0.1/vanta?charset=utf8mb4"
+set mysql_connection_string "mysql://user:password@127.0.0.1/qbcore?charset=utf8mb4"
 
 ensure oxmysql
-ensure vanta-core
-ensure vanta-ui
-ensure vanta-banking
-ensure vanta-police
-ensure vanta-hospital
 ensure qb-core
-ensure vanta-inventory
+ensure [qb]
+ensure [standalone]
+ensure [voice]
+ensure [defaultmaps]
 
-# Start framework-dependent resources after the bridge.
-# ensure your_inventory
+setr UseTarget false
+ensure vanta-loading
+ensure vanta-ui
 
-# Example ACE grants. Change identifiers and permissions for your server.
-add_ace group.admin vanta.admin allow
 add_ace group.admin command allow

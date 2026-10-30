@@ -16,7 +16,17 @@
     </div>
   </main>
   <aside id="notifications" class="notifications" aria-live="polite"></aside>
-  <section id="interaction" class="interaction hidden"><div class="interaction-heading"><span class="keycap">E</span><div><strong id="interactionLabel">Interact</strong><small>SCROLL TO SELECT · PRESS E</small></div></div><div id="interactionOptions" class="interaction-options"></div></section>
+  <section id="interaction" class="interaction-prompt hidden" aria-live="polite">
+    <span id="interactionIcon" class="interaction-prompt-icon">!</span>
+    <span class="interaction-prompt-copy"><small>NEARBY INTERACTION</small><strong id="interactionLabel">Interact</strong></span>
+    <span class="interaction-prompt-key">E</span>
+    <span class="interaction-prompt-hint">PRESS E OR ENTER</span>
+  </section>
+  <section id="interactionMenu" class="interaction-menu hidden" aria-live="polite">
+    <header class="interaction-menu-header"><span class="interaction-menu-mark">V</span><span><small>INTERACTION MENU</small><strong id="interactionMenuTitle">Choose an option</strong></span><kbd>ESC</kbd></header>
+    <div id="interactionOptions" class="interaction-options"></div>
+    <footer>SCROLL TO SELECT <i>•</i> PRESS E OR ENTER TO CONFIRM</footer>
+  </section>
   <main id="radial" class="radial hidden"><div class="radial-wheel"><div class="radial-center"><span>V</span><small>QUICK ACTIONS</small></div><div id="radialItems"></div></div><p class="radial-hint">SELECT AN ACTION · ESC TO CLOSE</p></main>
   <div id="progress" class="progress-wrap hidden"><div class="progress-card"><div class="progress-copy"><span id="progressLabel">Working…</span><b id="progressPercent">0%</b></div><div class="progress-track"><i id="progressFill"></i></div><small>PLEASE WAIT</small></div></div>
   <script src="app.js"></script>
