@@ -119,6 +119,7 @@ CreateThread(function()
 
             if #entry.options > 0 then
                 DisableControlAction(0, 38, true)
+                DisableControlAction(0, 191, true)
                 DisableControlAction(0, 241, true)
                 DisableControlAction(0, 242, true)
                 if interactionMenuOpen then DisableControlAction(0, 202, true) end
@@ -133,13 +134,13 @@ CreateThread(function()
                         SendNUIMessage({ action = 'interaction:menu:show', label = entry.label, options = entry.options, selected = selection })
                     end
 
-                    if IsDisabledControlJustPressed(0, 38) then
+                    if IsDisabledControlJustPressed(0, 38) or IsDisabledControlJustPressed(0, 191) then
                         runOption(entry.options[selection])
                         closeInteractionMenu()
                     elseif IsDisabledControlJustPressed(0, 202) then
                         closeInteractionMenu()
                     end
-                elseif IsDisabledControlJustPressed(0, 38) then
+                elseif IsDisabledControlJustPressed(0, 38) or IsDisabledControlJustPressed(0, 191) then
                     interactionMenuOpen, selection, sentSelection = true, 1, nil
                     SendNUIMessage({ action = 'interaction:menu:show', label = entry.label, options = entry.options, selected = selection })
                     sentSelection = selection
