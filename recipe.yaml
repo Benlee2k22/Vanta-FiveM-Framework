@@ -452,6 +452,7 @@ tasks:
     data: |
 
       # Vanta QBCore add-ons
+      setr UseTarget false
       ensure vanta-loading
       ensure vanta-ui
       ensure vanta-banking
