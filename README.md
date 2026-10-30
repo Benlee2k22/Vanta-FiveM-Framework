@@ -10,7 +10,7 @@ The txAdmin recipe is based on the [QBCore txAdmin recipe](https://github.com/qb
 - `vanta-loading`: branded loading screen with progress, tips and optional synthesized ambient music.
 - `vanta-banking`: bank and ATM interactions, deposits, withdrawals, online transfers and account history using QBCore player money methods.
 
-The QBCore recipe keeps its radial menu on **F1** and sets `UseTarget false`. Vanta's proximity interactions use E and the mouse wheel; they do not require a target eye.
+The QBCore recipe keeps its radial menu on **F1** and sets `UseTarget false`. Vanta's proximity interactions use E or Enter to open and confirm options, with the mouse wheel to select; they do not require a target eye.
 
 The current Vanta add-on set is an early access foundation. The recipe removes `qb-banking` and uses Vanta banking in its place; QBCore's other included resources provide the standard character, spawn, clothing, police, EMS and inventory flows. Older experimental custom-core resources in this repository are not installed by this recipe and should not be ensured alongside QBCore.
 
