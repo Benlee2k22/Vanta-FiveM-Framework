@@ -58,4 +58,4 @@ Vanta resources use QBCore APIs and can be installed separately. They are design
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+The MIT license in this repository applies to Vanta code. QBCore resources are downloaded from their upstream repositories during installation and retain their own licenses. See [LICENSE](LICENSE).
