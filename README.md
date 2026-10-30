@@ -4,7 +4,7 @@ A clean QBCore server setup with Vanta's custom interaction UI and loading scree
 
 ## Included
 
-The txAdmin recipe downloads the QBCore resources from the [QBCore txAdmin recipe](https://github.com/qbcore-fivem/txAdminRecipe/blob/main/qbcore.yaml), including character selection, spawn selection, clothing, banking, police, EMS, inventory, HUD and radial menu.
+The txAdmin recipe starts from the [QBCore txAdmin recipe](https://github.com/qbcore-fivem/txAdminRecipe/blob/main/qbcore.yaml). Editable source copies for qb-core, qb-target, qb-radialmenu, qb-multicharacter, qb-spawn, qb-menu and qb-input are stored under `resources/[qb]` in this repository; the installer replaces those upstream copies with these files. Other QBCore resources still download from the upstream recipe until we add editable copies.
 
 This repository adds:
 

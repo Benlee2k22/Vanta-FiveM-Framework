@@ -421,6 +421,61 @@ tasks:
     ref: main
     src: https://github.com/qbcore-fivem/qb-loading
 
+  # Replace selected upstream resources with editable repository copies
+  - action: download_github
+    src: https://github.com/Benlee2k22/Vanta-FiveM-Framework
+    ref: main
+    dest: ./tmp/vanta-source
+
+  - action: remove_path
+    path: ./resources/[qb]/qb-core
+
+  - action: move_path
+    src: ./tmp/vanta-source/resources/[qb]/qb-core
+    dest: ./resources/[qb]/qb-core
+
+  - action: remove_path
+    path: ./resources/[qb]/qb-target
+
+  - action: move_path
+    src: ./tmp/vanta-source/resources/[qb]/qb-target
+    dest: ./resources/[qb]/qb-target
+
+  - action: remove_path
+    path: ./resources/[qb]/qb-radialmenu
+
+  - action: move_path
+    src: ./tmp/vanta-source/resources/[qb]/qb-radialmenu
+    dest: ./resources/[qb]/qb-radialmenu
+
+  - action: remove_path
+    path: ./resources/[qb]/qb-multicharacter
+
+  - action: move_path
+    src: ./tmp/vanta-source/resources/[qb]/qb-multicharacter
+    dest: ./resources/[qb]/qb-multicharacter
+
+  - action: remove_path
+    path: ./resources/[qb]/qb-spawn
+
+  - action: move_path
+    src: ./tmp/vanta-source/resources/[qb]/qb-spawn
+    dest: ./resources/[qb]/qb-spawn
+
+  - action: remove_path
+    path: ./resources/[qb]/qb-menu
+
+  - action: move_path
+    src: ./tmp/vanta-source/resources/[qb]/qb-menu
+    dest: ./resources/[qb]/qb-menu
+
+  - action: remove_path
+    path: ./resources/[qb]/qb-input
+
+  - action: move_path
+    src: ./tmp/vanta-source/resources/[qb]/qb-input
+    dest: ./resources/[qb]/qb-input
+
   # Vanta UI and loading-screen add-ons
   - action: download_github
     src: https://github.com/Benlee2k22/Vanta-FiveM-Framework
