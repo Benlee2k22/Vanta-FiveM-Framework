@@ -28,19 +28,34 @@ local function getLocation(src)
 end
 
 local function refresh(src, message, ok)
-    local Player = getPlayer(src)
     TriggerClientEvent('vanta-banking:client:result', src, {
-        ok = ok, message = message, money = getMoney(Player)
+        ok = ok, message = message, money = getMoney(getPlayer(src))
     })
+end
+
+local function ensureLedger()
+    MySQL.query.await([[
+        CREATE TABLE IF NOT EXISTS vanta_bank_transactions (
+          id bigint unsigned NOT NULL AUTO_INCREMENT,
+          citizenid varchar(50) NOT NULL,
+          action varchar(32) NOT NULL,
+          amount int NOT NULL,
+          description varchar(120) NOT NULL DEFAULT '',
+          reference varchar(32) NOT NULL,
+          created_at timestamp NOT NULL DEFAULT current_timestamp(),
+          PRIMARY KEY (id),
+          KEY idx_vanta_bank_citizen (citizenid, id),
+          KEY idx_vanta_bank_reference (reference)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    ]])
 end
 
 RegisterNetEvent('vanta-banking:server:history', function()
     local src, Player = source, getPlayer(source)
     if not Player then return end
-    local citizenid = Player.PlayerData.citizenid
     local rows = MySQL.query.await(
         'SELECT action, amount, description, reference, created_at FROM vanta_bank_transactions WHERE citizenid = ? ORDER BY id DESC LIMIT 15',
-        { citizenid }
+        { Player.PlayerData.citizenid }
     ) or {}
     TriggerClientEvent('vanta-banking:client:history', src, rows)
 end)
@@ -129,7 +144,7 @@ RegisterNetEvent('vanta-banking:server:action', function(payload)
         local added = removed and recipient.Functions.AddMoney('bank', amount, 'vanta-bank-transfer')
         if removed and not added then Player.Functions.AddMoney('bank', amount, 'vanta-bank-transfer-rollback') end
         changed = removed and added
-        description = ('Transfer to %s'):format(Player.PlayerData.charinfo.firstname or 'player')
+        description = ('Transfer to %s'):format((Player.PlayerData.charinfo or {}).firstname or 'player')
     else
         if recipient then busy[recipient.PlayerData.source] = nil end
         finish('Unknown banking action.', false)
@@ -151,7 +166,7 @@ RegisterNetEvent('vanta-banking:server:action', function(payload)
     if recipient then
         ledger[#ledger + 1] = { 'INSERT INTO vanta_bank_transactions (citizenid, action, amount, description, reference) VALUES (?, ?, ?, ?, ?)', {
             recipient.PlayerData.citizenid, 'transfer_in', amount,
-            ('Transfer from %s'):format(Player.PlayerData.charinfo.firstname or 'player'), reference
+            ('Transfer from %s'):format((Player.PlayerData.charinfo or {}).firstname or 'player'), reference
         } }
     end
     local ok, logged = pcall(function() return MySQL.transaction.await(ledger) end)
@@ -166,3 +181,9 @@ RegisterNetEvent('vanta-banking:server:action', function(payload)
 end)
 
 AddEventHandler('playerDropped', function() busy[source] = nil end)
+AddEventHandler('onResourceStart', function(resource)
+    if resource == GetCurrentResourceName() then
+        ensureLedger()
+        print('^5[Vanta Bank]^7 QBCore banking ready.')
+    end
+end)
