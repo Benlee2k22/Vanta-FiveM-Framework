@@ -1,80 +1,60 @@
-# Vanta Framework for FiveM
+# Vanta QBCore Add-ons
 
-Vanta is an original FiveM roleplay framework foundation with a modern, themeable NUI and a QBCore compatibility resource.
+Vanta is a set of modular FiveM resources built to run on the upstream QBCore framework. It does not replace or fork QBCore's player core.
 
-> **Status:** early access build for development and controlled server trials. Broad QBCore script compatibility, housing, garages and a complete economy remain future work.
+## What the installer sets up
 
-## Included
+The txAdmin recipe is based on the [QBCore txAdmin recipe](https://github.com/qbcore-fivem/txAdminRecipe/blob/main/qbcore.yaml). It installs the standard QBCore server resources, including character selection, spawn selection, clothing, police, EMS, inventory and HUD. It adds these Vanta resources:
 
-- `vanta-core`: player persistence, money, jobs, callbacks, notifications, permissions and exports.
-- `qb-core` compatibility resource: `exports['qb-core']:GetCoreObject()` with common player, callback, notify and progress APIs.
-- `vanta-ui`: original dark glass theme, presets, `/uitheme`, `/uisettings`, E-and-scroll proximity interactions, F1 radial quick actions, notifications and progress bar.
-- `vanta-banking`: ATM and branch deposits, withdrawals, online player transfers and account history.
-- `vanta-police`: station duty, server-checked cuffs and escort, and backup alerts.
-- `vanta-hospital`: paid hospital check-in, EMS duty and nearby treatment.
-- `vanta-inventory`: persistent slot inventory with usable food, water and bandages.
-- `vanta-character`: per-license character slots, character creation/deletion, character-specific data, and a last-location/preset spawn selector.
-- `vanta-clothing`: component/prop clothing editor, paid clothing-store purchases, saved character outfits, and wardrobes.
-- `vanta-loading`: branded loading screen, connection progress, rotating tips, and optional synthesized ambient music.
-- Bottom-left boxed E interaction prompt that opens a scrollable options menu; the F1 radial remains for quick actions.
-- SQL schema and example `server.cfg`.
+- `vanta-ui`: boxed bottom-left E prompt, scroll-to-select action menu, notifications, theme editor, progress UI and optional Vanta actions on F2.
+- `vanta-loading`: branded loading screen with progress, tips and optional synthesized ambient music.
+- `vanta-banking`: bank and ATM interactions, deposits, withdrawals, online transfers and account history using QBCore player money methods.
 
-Compatibility depends on each script's API usage. Standard QBCore calls can be translated; scripts that depend on QBCore internals, inventory/target resources or custom events need a matching adapter/module.
+The QBCore recipe keeps its radial menu on **F1** and sets `UseTarget false`. Vanta's proximity interactions use E and the mouse wheel; they do not require a target eye.
 
-## Requirements
-
-- FXServer with OneSync enabled
-- MariaDB/MySQL and [oxmysql](https://github.com/overextended/oxmysql)
+The current Vanta add-on set is an early access foundation. The Vanta banking resource replaces the QBCore recipe's `qb-banking`; QBCore's other included resources provide the standard character, spawn, clothing, police, EMS and inventory flows while Vanta-specific versions are built.
 
 ## Install with txAdmin
 
-Vanta includes a txAdmin remote recipe that installs the framework resources, oxmysql, the default Cfx resources, database tables, and a starter `server.cfg`.
+For a fresh test server:
 
-1. In txAdmin, open the Recipe Deployer and choose the option to enter a remote recipe URL.
-2. Paste this URL:
+1. In txAdmin, open **Recipe Deployer** and select the option to enter a remote recipe URL.
+2. Paste:
 
-   `https://raw.githubusercontent.com/Benlee2k22/Vanta-FiveM-Framework/vanta-next/recipe.yaml`
+   `https://raw.githubusercontent.com/Benlee2k22/Vanta-FiveM-Framework/qbcore-suite/recipe.yaml`
 
-3. Review the recipe, then continue to the inputs. Enter your Cfx server key and the details for a MySQL/MariaDB database that the server can reach.
-4. Run the recipe. It creates a new server profile, imports the Vanta tables, and downloads the new character, clothing and loading resources.
-5. When deployment finishes, start the server from txAdmin and check the console for resource errors.
+3. Enter your Cfx server key and reachable MySQL/MariaDB connection details.
+4. Run the recipe and start the new profile. Check the server console and F8 console for errors.
 
-Use a fresh test profile and a test database for the first installation. The recipe configures a resource named `qb-core` for compatibility, so do not add it alongside another resource with the same name.
+Use a fresh test profile and test database. This recipe deploys a QBCore server profile; it will not update a server profile that was installed from the old Vanta custom-core recipe.
 
-## Manual install
+## Resource order for manual installs
 
-1. Put the Vanta resources plus `qb-core` in your resources directory. Keep the compatibility folder named **`qb-core`** so existing scripts resolve `exports['qb-core']`.
-2. Import `sql/vanta.sql` into the database configured for oxmysql.
-3. Set `mysql_connection_string` in `server.cfg`.
-4. Ensure resources in this order:
+Install QBCore and its dependencies first. Then add the Vanta resources and ensure them after QBCore:
 
 ```cfg
-ensure oxmysql
-ensure vanta-loading
-ensure vanta-core
-ensure vanta-ui
-ensure vanta-character
-ensure vanta-clothing
-ensure vanta-banking
-ensure vanta-police
-ensure vanta-hospital
 ensure qb-core
-ensure vanta-inventory
+ensure [qb]
+ensure [standalone]
+ensure [voice]
+ensure [defaultmaps]
+
+ensure vanta-loading
+ensure vanta-ui
+ensure vanta-banking
 ```
 
-5. Start framework-dependent scripts after those lines. Disable the original QBCore `qb-core` to avoid a resource-name conflict.
-6. Connect and use `/uitheme` to open the theme editor. On join, create or select a character, then choose a spawn. Character slots are separate for money, job, inventory, position and appearance. Use `/vantahelp` for commands.
-7. Clothing controls use the boxed E prompt at shops and wardrobes. Save shop looks for $250; saved outfits can be worn at a wardrobe. Configure locations and price in `vanta-clothing/shared/config.lua`.
-8. Assign development jobs from the console with `/setjob [player id] police 1` or `/setjob [player id] ambulance 1`. In-game use requires the `vanta.admin` ACE permission.
-9. Open inventory with **I**. For development, use `/giveitem [player id] water_bottle 3` from the console or with the `vanta.admin` ACE permission.
+Set `UseTarget false` in the QBCore server configuration to use the E-and-scroll interaction flow. Keep QBCore's `qb-radialmenu` on F1; Vanta's optional add-on radial is on F2.
 
-See [docs/systems.md](docs/systems.md) for current system flows and [docs/test-checklist.md](docs/test-checklist.md) for a practical two-player test session.
+## Compatibility
+
+Vanta resources use QBCore APIs and can be installed separately. They are designed to work alongside common QBCore resources; do not install two resources that provide the same function under the same resource name.
 
 ## Security
 
-- Treat client events as untrusted. Validate money and gameplay actions server-side.
-- Set ACE permissions for admin commands.
-- Never commit database credentials or server keys.
+- Keep money changes and protected actions on the server.
+- Do not commit database credentials or server keys.
+- Validate any added client event on the server before changing player state.
 
 ## License
 
